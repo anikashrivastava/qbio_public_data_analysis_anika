@@ -55,7 +55,7 @@ mid_codes <- maf_dataframe@clinical.data[maf_dataframe@clinical.data$Ages =="Mid
 old_codes <- maf_dataframe@clinical.data[maf_dataframe@clinical.data$Ages =="Old",]
 
 NA_codes <- maf_dataframe@clinical.data[is.na(maf_dataframe@clinical.data$Ages),]
-length(NA_codes$Ages)
+print(dim(NA_codes))
 
 #create maf subsets for each age group
 young_maf <- subsetMaf(maf_dataframe, tsb = young_codes$Tumor_Sample_Barcode)
@@ -112,12 +112,12 @@ old_maf <- subsetMaf(maf_dataframe, tsb = old_codes$Tumor_Sample_Barcode)
 # boxplot(GATA3_counts_log~age_category, data = patient_data, main = "Boxplot of HTSeq - Counts for GATA3 by Age Category")
 # dev.off()
 # 
-# clin_query <- GDCquery(project = "TCGA-BRCA", data.category="Clinical", file.type = "xml")
-# GDCdownload( clin_query ) #only need this command once. This downloads the files onto your system.
-# clinic <- GDCprepare_clinic(clin_query, clinical.info="patient")
-# names(clinic)[names(clinic) == "days_to_last_followup"] = "days_to_last_follow_up" #fixes an error in the name of the column
-# 
-# age_clinical = clinic$age_at_initial_pathologic_diagnosis
-# clinic$age_category = ifelse(age_clinical < 40, "Young", ifelse(age_clinical >= 60, "Old", "Mid"))
-# 
-# TCGAanalyze_survival(clinic, "age_category")
+clin_query <- GDCquery(project = "TCGA-BRCA", data.category="Clinical", file.type = "xml")
+GDCdownload( clin_query ) #only need this command once. This downloads the files onto your system.
+clinic <- GDCprepare_clinic(clin_query, clinical.info="patient")
+names(clinic)[names(clinic) == "days_to_last_followup"] = "days_to_last_follow_up" #fixes an error in the name of the column
+ 
+age_clinical = clinic$age_at_initial_pathologic_diagnosis
+clinic$age_category = ifelse(age_clinical < 40, "Young", ifelse(age_clinical >= 60, "Old", "Mid"))
+ 
+TCGAanalyze_survival(clinic, "age_category")
